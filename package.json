@@ -8,8 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@jobinsjp/vue3-datatable": "^1.0.15",
+    "axios": "^1.1.2",
     "core-js": "^3.8.3",
+    "datatables.net-bs5": "^1.12.1",
+    "datatables.net-dt": "^1.12.1",
+    "datatables.net-select": "^1.4.0",
+    "datatables.net-vue3": "^1.0.0",
     "vue": "^3.2.13",
+    "vue3-easy-data-table": "^1.5.3",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
