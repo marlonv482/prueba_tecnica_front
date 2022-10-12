@@ -23,26 +23,36 @@ export default createStore({
     selectEmail(state, id) {
       state.emailSelected = id
     },
-    getEmails(state,emails){
-     
-      emails.forEach(e=>{
-        
-          state.emails.push(e._source)  
+    getEmails(state, emails) {
+
+     emails.forEach(e => {
+
+         state.emails.push(e._source)
       })
-      
+
     }
-  
+
   },
   actions: {
-    getEmails({ commit }) {
-      axios.get('http://localhost:9000/getEmails')
-      .then(res => {
-       let email=JSON.parse(res.data)
-       
-        
-        commit("getEmails",email.hits.hits)
+    async getEmails({ commit }) {
+
+      for (let i = 0; i < 1; i++) {
+        await axios.get('http://localhost:9000/getEmails', {
+          params: {
+            id: (i * 10000+1),
+          }
+        })
+          .then(res => {
+            let email = JSON.parse(res.data)
+            console.log(email)
+
+            commit("getEmails", email.hits.hits)
+          }
+          )
+          
+
       }
-      )
+
 
     }
   },

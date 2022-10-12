@@ -27,53 +27,12 @@
     </div>
     <div class="correos">
       <div class="tabla" v-if="show">
-        <!--
-          <DataTable ref="table" :options="{select: true, }" class="display" :data="data"
-          style="font-size: 10px;  white-space: nowrap;overflow: auto;text-overflow: ellipsis;">
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>From</th>
-              <th>To</th>
-            </tr>
-          </thead>
-
-        </DataTable>
-        -->
+      
 
 
         <EasyDataTable :headers="headers" :items="data" :search-field="searchField" :search-value="searchValue"
           @click-row="selectMail($event)" border-cell />
-        <!--
-          <div  style="display: flex;border-bottom: solid 1px black;">
-          <div style="display: flex;">
-            <div class="encabezado-tabla">
-              <span style="font-size: 20px;">Subject</span>
-            </div>
-            <div class="encabezado-tabla">
-              <span style="font-size: 20px;">From</span>
-            </div>
-            <div class="encabezado-tabla">
-              <span style="font-size: 20px;">To</span>
-            </div>
-          </div>
-          </div>
-          <div v-for=" (email, index) in emails" @click="selectMail(email,index)" :key="email.Message_ID"
-            :class="{ 'table-active': activeIndex == index }" style="display: flex;width:750px ;">
-            <div style="display: flex;border-bottom: solid 1px black;" >
-              <div class="encabezado-tabla" >
-
-                <span>{{email.Subject}}</span>
-              </div>
-              <div class="encabezado-tabla">
-                <span>{{email.From}}</span>
-              </div>
-              <div class="encabezado-tabla">
-                <span>{{email.To}}</span>
-              </div>
-            </div>
-          </div>
-        -->
+      
       </div>
       <div class="correo">
         <table>
