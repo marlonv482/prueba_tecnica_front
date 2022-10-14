@@ -25,34 +25,53 @@ export default createStore({
     },
     getEmails(state, emails) {
 
-     emails.forEach(e => {
+      emails.forEach(e => {
 
-         state.emails.push(e._source)
+        state.emails.push(e._source)
       })
 
     }
 
   },
   actions: {
-    async getEmails({ commit }) {
-
+    async getEmails({commit}) {
       for (let i = 0; i < 1; i++) {
-        await axios.get('http://localhost:9000/getEmails', {
-          params: {
-            id: (i * 10000+1),
-          }
+        await axios.get(`http://localhost:9001/getEmails/${i}`)
+        .then(res => {
+          //console.log(JSON.parse(res.data))
+          let email = JSON.parse(res.data)
+          commit("getEmails", email.hits.hits)
+        }
+        )
+        .catch(Error => {
+          console.log(Error)
         })
-          .then(res => {
-            let email = JSON.parse(res.data)
-            console.log(email)
-
-            commit("getEmails", email.hits.hits)
-          }
-          )
-          
+        
+      }
+      
+     /* for (let i = 0; i < 7; i++) {
+     
+        let q = {
+        search_type: "alldocuments",
+        from: i*10000,
+       max_results: 10000,
+        _source: []
 
       }
+      
+      axios.post('http://localhost:4080/api/olympics/_search', q, {
+        auth: {
+          username: 'admin',
+          password: '0208Mavl'
+        }
+      })
+        .then(res => {
+          console.log(res.data)
+        })
+      
+       
 
+      }*/
 
     }
   },

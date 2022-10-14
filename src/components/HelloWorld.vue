@@ -5,40 +5,36 @@
 </script>
 
 <template>
-  <div>
-
-  </div>
-  <div class="contenedor">
-    <div class="titulo">
+  
+  <div class="container" >
+    <div class="row mx-auto">
       <h1 style="font-weight: 600;font-size: 40px;">Mamoru Email</h1>
     </div>
-    <div style="display: flex;">
+    <div class="row mx-auto" style="display: flex;">
       <select class="custom-select custom-select-sm" v-model="searchField" style="width: 200px;margin-right: 1rem;">
-      <option selected>Subject</option>
-      <option>From</option>
-      <option>To</option>
-
-    </select>
-    <div class="input-group-sm mb-2">
-
-      <input type="text" class="form-control" v-model="searchValue" aria-label="Text input with dropdown button"
-        placeholder="Buscar">
-    </div>
-    </div>
-    <div class="correos">
-      <div class="tabla" v-if="show">
-      
-
-
-        <EasyDataTable :headers="headers" :items="data" :search-field="searchField" :search-value="searchValue"
-          @click-row="selectMail($event)" border-cell />
-      
+        <option selected>Subject</option>
+        <option>From</option>
+        <option>To</option>
+      </select>
+      <div class="input-group-sm mb-2">
+        <input type="text" class="form-control" v-model="searchValue" aria-label="Text input with dropdown button"
+          placeholder="Buscar">
       </div>
-      <div class="correo">
-        <table>
+    </div>
+    <div class=" row" v-if="show">
+      <div class=" mx-auto " style="display: flex;">
+      <div class="container" >
+        <EasyDataTable :headers="headers" :items="data" 
+          @click-row="selectMail($event)" border-cell buttons-pagination :rows-per-page="15" />
 
+      </div>
+
+      <div class="container correo " style="margin-left:2rem ;border: solid 1px black;max-width: 45rem; overflow: auto;">
+
+        <table>
           <tbody>
-            <tr v-if="emailSelected.Message_ID">
+            <!--
+              <tr v-if="emailSelected.Message_ID">
               <td>
                 <div class="label_Email">
                   <h6>Message-ID:</h6>
@@ -46,13 +42,14 @@
               </td>
               <td><span>{{emailSelected.Message_ID}}</span></td>
             </tr>
+            -->
             <tr v-if="emailSelected.Date">
               <td>
                 <div class="label_Email">
                   <h6>Date:</h6>
                 </div>
               </td>
-              <td><span>{{emailSelected.Date}}</span></td>
+              <td><span>{{emailSelected.Date.trimStart()}}</span></td>
             </tr>
             <tr v-if="emailSelected.From">
               <td>
@@ -61,23 +58,23 @@
                   <h6>From:</h6>
                 </div>
               </td>
-              <td><span>{{emailSelected.From}}</span></td>
+              <td><span>{{emailSelected.From.trimStart()}}</span></td>
             </tr>
             <tr v-if="emailSelected.To">
               <td>
-                <div class="label_Email">
+                <div class="label_Email" style="vertical-align: text-top;">
                   <h6>To:</h6>
                 </div>
               </td>
-              <td><span>{{emailSelected.To}}</span></td>
+              <td><span>{{emailSelected.To.trimStart()}}</span></td>
             </tr>
             <tr v-if="emailSelected.Subject">
               <td>
                 <div class="label_Email">
-                  <h6>Subject:</h6>
+                  <h6>Subject: </h6>
                 </div>
               </td>
-              <td><span>{{emailSelected.Subject}}</span></td>
+              <td><span>{{emailSelected.Subject.trimStart()}}</span></td>
             </tr>
             <tr v-if="emailSelected.Cc">
               <td>
@@ -85,9 +82,10 @@
                   <h6>CC:</h6>
                 </div>
               </td>
-              <td><span>{{emailSelected.Cc}}</span></td>
+              <td><span>{{emailSelected.Cc.trimStart()}}</span></td>
             </tr>
-            <tr v-if="emailSelected.Mime_Version">
+           <!--
+              <tr v-if="emailSelected.Mime_Version">
               <td>
                 <div class="label_Email">
                   <h6>Mime-Version:</h6>
@@ -112,6 +110,7 @@
               </td>
               <td><span>{{emailSelected.Content_Transfer_Encoding}}</span></td>
             </tr>
+          -->
             <tr v-if="emailSelected.Bcc">
               <td>
                 <div class="label_Email">
@@ -120,6 +119,7 @@
               </td>
               <td><span>{{emailSelected.Bcc}}</span></td>
             </tr>
+            <!--
             <tr v-if="emailSelected.X_From">
               <td>
                 <div class="label_Email">
@@ -172,11 +172,11 @@
               </td>
               <td><span>{{emailSelected.X_FileName}}</span></td>
             </tr>
-
-            <tr>
+            -->
+            <tr style="max-width: 20rem;">
               <td colspan="2">
-                <div style="text-align: justify;">
-                  <br>
+                <div style="text-align: justify;" >
+
                   <div v-html="contenEmail"></div>
 
                 </div>
@@ -188,11 +188,11 @@
         </table>
       </div>
     </div>
+    </div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex';
-import DataTable from 'datatables.net-vue3';
 
 export default {
   setup() {
@@ -200,9 +200,9 @@ export default {
 
 
     const headers = [
-      { text: "Subject", value: "Subject" },
-      { text: "From", value: "From", sortable: true },
-      { text: "To", value: "To", sortable: true },
+      { text: "Subject", value: "Subject", sortable: true, width: 200 },
+      { text: "From", value: "From", sortable: true, width: 200 },
+      { text: "To", value: "To", sortable: true, width: 200 },
 
     ];
 
@@ -213,7 +213,6 @@ export default {
     };
   },
   components: {
-    DataTable,
 
   },
   data() {
@@ -248,29 +247,68 @@ export default {
       }
       return ''
     },
+    filterData() {
+      let data = []
+    
+     
+       try {
+        this.emails.forEach(em => {
+          if (this.searchField == "To") {
+            
+            if (em.To.trimStart().substring(0,this.searchValue.length)==this.searchValue){
+           
+            
+           data.push(em)
+         }
+          } else if (this.searchField == "From") {
+            if (em.From.trimStart().substring(0,this.searchValue.length)==this.searchValue){
+           
+            
+           data.push(em)
+         }
+          } else {
+               
+            if (em.Subject.trimStart().substring(0,this.searchValue.length)==this.searchValue){
+           
+            
+              data.push(em)
+            }
+          }
+        })
+       } catch (error) {
+      return data
+         
+       }
+
+       
+    
+      return data
+    },
     data() {
-
+      if( this.filterData.length==0){
+        return []
+      }
       let d = []
-
-      this.emails.forEach((e) => {
+     
+      this.filterData.forEach((e) => {
 
         let s = ''
-        if (e.Subject.length > 20) {
-          s = e.Subject.substring(0, 17) + "..."
+        if (e.Subject.length > 27) {
+          s = e.Subject.trimStart().substring(0, 25) + "..."
         } else {
-          s = e.Subject
+          s = e.Subject.trimStart()
         }
         let f = ''
-        if (e.From.length > 20) {
-          f = e.From.substring(0, 17) + "..."
+        if (e.From.length > 27) {
+          f = e.From.trimStart().substring(0, 25) + "..."
         } else {
-          f = e.From
+          f = e.From.trimStart()
         }
         let t = ''
-        if (e.To.length > 20) {
-          t = e.To.substring(0, 17) + "..."
+        if (e.To.length > 27) {
+          t = e.To.trimStart().substring(0, 25) + "..."
         } else {
-          t = e.To
+          t = e.To.trimStart()
         }
         //let arr = [s, f, t, e.Message_ID]
         let arr = { "Subject": s, "From": f, "To": t, "Message_ID": e.Message_ID }
@@ -292,15 +330,20 @@ export default {
   },
   methods: {
     selectMail($event) {
+      try {
+        let mail = $event
 
-      let mail = $event
+        this.emailSelected = this.emails.find(e => {
+          if (e.Message_ID == mail.Message_ID) {
+            console.log(e)
+            return e
+          }
+        })
+      } catch (error) {
+        console.log(error)
 
-      this.emailSelected = this.emails.find(e => {
-        if (e.Message_ID == mail.Message_ID) {
-
-          return e
-        }
-      })
+      }
+      return {}
 
 
 
@@ -315,9 +358,7 @@ export default {
 
 
   },
-  mounted() {
-    console.log(this.$refs)
-  }
+ 
 }
 </script>
 <style>
@@ -330,7 +371,7 @@ export default {
 .label_Email {
   overflow: hidden;
   white-space: nowrap;
-  width: 220px;
+  width: 65px;
   padding: 0;
   margin: 0;
 }
@@ -351,6 +392,7 @@ h6 {
   margin: 0;
   padding-right: 0.5rem;
   font-size: 17px;
+  font-weight: 600;
 }
 
 .contenedor {
@@ -360,7 +402,7 @@ h6 {
 
 .titulo {
   width: 100%;
-  
+
 }
 
 .buscador {
@@ -389,13 +431,21 @@ h6 {
 
 .correo {
   padding: 1rem;
-  width: 80rem;
-  max-height: 45rem;
-  overflow: auto;
+  width: 3000px;
+ 
+  max-height: 47rem;
+  border-radius: 5px;
   font-size: 17px;
   border: solid 1px black;
 }
 
+.content{
+  font-size: 17px;
+  border: solid 1px black;
+  padding: 2rem;
+  width: 670px;
+  
+}
 .encabezado-tabla {
 
   min-width: 250px;
@@ -408,5 +458,11 @@ h6 {
   margin-bottom: 0.5rem;
 
   font-size: 15px;
+}
+.custom-scroll{
+  scroll-behavior: smooth;
+  
+    
+  
 }
 </style>
