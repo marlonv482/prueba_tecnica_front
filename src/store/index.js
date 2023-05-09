@@ -29,6 +29,7 @@ export default createStore({
 
         state.emails.push(e._source)
       })
+      console.log(state.emails)
 
     }
 
@@ -38,8 +39,8 @@ export default createStore({
       for (let i = 0; i < 1; i++) {
         await axios.get(`http://localhost:9001/getEmails/${i}`)
         .then(res => {
-          //console.log(JSON.parse(res.data))
-          let email = JSON.parse(res.data)
+          console.log((res.data))
+          let email = (res.data)
           commit("getEmails", email.hits.hits)
         }
         )
